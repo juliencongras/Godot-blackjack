@@ -3,6 +3,6 @@
 [ext_resource type="Script" path="res://Card/card.gd" id="1_8mne0"]
 
 [node name="Card" type="Sprite2D"]
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.1, 0.1)
 centered = false
 script = ExtResource("1_8mne0")

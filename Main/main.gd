@@ -30,6 +30,7 @@ var cardsDeck : Dictionary = {
 			}
 		,
 }
+var deckCopy = cardsDeck.duplicate()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -41,15 +42,26 @@ func _process(delta):
 	handValueLabel.text = str("Hand value: ", handValue)
 
 func _on_draw_card_button_pressed():
-	var drawnSuit = randi_range(0, cardsDeck.size() - 1)
-	var drawnSuitRandom = cardsDeck.keys()[drawnSuit]
-	var randomCard = randi_range(0, cardsDeck[drawnSuitRandom]["names"].size() - 1)
-	var randomCardName = cardsDeck[drawnSuitRandom]["names"][randomCard]
-	var randomCardValue = cardsDeck[drawnSuitRandom]["values"][randomCard]
+	var drawnSuit = randi_range(0, deckCopy.size() - 1)
+	var drawnSuitRandom = deckCopy.keys()[drawnSuit]
+	var randomCard = randi_range(0, deckCopy[drawnSuitRandom]["names"].size() - 1)
+	var randomCardName = deckCopy[drawnSuitRandom]["names"][randomCard]
+	var randomCardValue = deckCopy[drawnSuitRandom]["values"][randomCard]
 	var cardInstance = cardScene.instantiate()
 	cardInstance.cardSuit = drawnSuitRandom
 	cardInstance.cardName = randomCardName
 	cardInstance.cardValue = randomCardValue
 	cardInstance.position = Vector2(cardOffset, 0)
 	hand.add_child(cardInstance)
+	deckCopy[drawnSuitRandom]["names"].remove_at(randomCard)
+	deckCopy[drawnSuitRandom]["values"].remove_at(randomCard)
+	if deckCopy[drawnSuitRandom]["names"].size() == 0:
+		deckCopy.erase(drawnSuitRandom)
 	handValue += cardInstance.cardValue
+	print(deckCopy)
+
+func _on_reset_button_pressed():
+	for card in hand.get_children():
+		card.queue_free()
+	handValue = 0
+	deckCopy = cardsDeck.duplicate()

@@ -7,11 +7,11 @@
 script = ExtResource("1_hx1no")
 cardScene = ExtResource("2_j3i4p")
 
-[node name="Button" type="Button" parent="."]
-offset_left = 16.0
+[node name="DrawButton" type="Button" parent="."]
+offset_left = 80.0
 offset_top = 24.0
-offset_right = 24.0
-offset_bottom = 32.0
+offset_right = 130.0
+offset_bottom = 55.0
 text = "Draw"
 
 [node name="Card" type="Sprite2D" parent="."]
@@ -22,9 +22,17 @@ centered = false
 position = Vector2(32, 112)
 
 [node name="Hand value" type="Label" parent="."]
-offset_left = 80.0
+offset_left = 136.0
 offset_top = 28.0
-offset_right = 120.0
+offset_right = 176.0
 offset_bottom = 51.0
 
-[connection signal="pressed" from="Button" to="." method="_on_draw_card_button_pressed"]
+[node name="ResetButton" type="Button" parent="."]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 75.0
+offset_bottom = 55.0
+text = "Reset"
+
+[connection signal="pressed" from="DrawButton" to="." method="_on_draw_card_button_pressed"]
+[connection signal="pressed" from="ResetButton" to="." method="_on_reset_button_pressed"]
