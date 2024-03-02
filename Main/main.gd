@@ -2,8 +2,10 @@ extends Node2D
 
 @onready var cardDrawnLabel = $CardDrawn
 @onready var cardSprite = $Card
+@onready var hand = $Hand
+@export var cardScene : PackedScene
 
-var cardsPath = "res://Assets/Cards/"
+var cardOffset : int = 0
 var cardsDeck : Dictionary = {
 	"hearts":
 		{
@@ -42,6 +44,10 @@ func _on_draw_card_button_pressed():
 	var randomCard = randi_range(0, cardsDeck[drawnSuitRandom]["names"].size() - 1)
 	var randomCardName = cardsDeck[drawnSuitRandom]["names"][randomCard]
 	var randomCardValue = cardsDeck[drawnSuitRandom]["values"][randomCard]
-	cardSprite.texture = load(str(cardsPath, drawnSuitRandom, "_", randomCardName, ".png"))
-	cardSprite.scale = Vector2(0.5, 0.5)
-	cardDrawnLabel.text = str("You've drawn the ", randomCardName, " of ", drawnSuitRandom, ". Which has a value of ", randomCardValue, "." )
+	var cardInstance = cardScene.instantiate()
+	cardInstance.cardSuit = drawnSuitRandom
+	cardInstance.cardName = randomCardName
+	cardInstance.cardValue = randomCardValue
+	cardInstance.position = Vector2(cardOffset, 0)
+	hand.add_child(cardInstance)
+	cardOffset += 50
