@@ -19,4 +19,8 @@ offset_right = 56.0
 offset_bottom = 87.0
 text = "Draw a card"
 
+[node name="Card" type="Sprite2D" parent="."]
+position = Vector2(32, 112)
+centered = false
+
 [connection signal="pressed" from="Button" to="." method="_on_draw_card_button_pressed"]
