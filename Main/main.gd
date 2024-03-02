@@ -1,11 +1,12 @@
 extends Node2D
 
-@onready var cardDrawnLabel = $CardDrawn
 @onready var cardSprite = $Card
 @onready var hand = $Hand
 @export var cardScene : PackedScene
+@onready var handValueLabel = $"Hand value"
 
 var cardOffset : int = 0
+var handValue : int = 0
 var cardsDeck : Dictionary = {
 	"hearts":
 		{
@@ -36,7 +37,8 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	cardOffset = 50 * hand.get_child_count()
+	handValueLabel.text = str("Hand value: ", handValue)
 
 func _on_draw_card_button_pressed():
 	var drawnSuit = randi_range(0, cardsDeck.size() - 1)
@@ -50,4 +52,4 @@ func _on_draw_card_button_pressed():
 	cardInstance.cardValue = randomCardValue
 	cardInstance.position = Vector2(cardOffset, 0)
 	hand.add_child(cardInstance)
-	cardOffset += 50
+	handValue += cardInstance.cardValue
