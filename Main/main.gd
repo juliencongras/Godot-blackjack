@@ -7,7 +7,7 @@ extends Node2D
 
 var cardOffset : int = 0
 var handValue : int = 0
-var cardsDeck : Dictionary = {
+var deckCopy : Dictionary = {
 	"hearts":
 		{
 			"names": ["2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace"],
@@ -30,7 +30,6 @@ var cardsDeck : Dictionary = {
 			}
 		,
 }
-var deckCopy = cardsDeck.duplicate()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -58,10 +57,32 @@ func _on_draw_card_button_pressed():
 	if deckCopy[drawnSuitRandom]["names"].size() == 0:
 		deckCopy.erase(drawnSuitRandom)
 	handValue += cardInstance.cardValue
-	print(deckCopy)
 
 func _on_reset_button_pressed():
 	for card in hand.get_children():
 		card.queue_free()
 	handValue = 0
-	deckCopy = cardsDeck.duplicate()
+	#The duplicate function doesn't work, so, I have to reassign the dictionary from scratch if I want to reset the deck.
+	deckCopy = {
+	"hearts":
+		{
+			"names": ["2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace"],
+			"values": [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11]
+			},
+	"clubs":
+		{
+			"names": ["2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace"],
+			"values": [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11]
+			},
+	"spades":
+		{
+			"names": ["2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace"],
+			"values": [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11]
+			},
+	"diamonds":
+		{
+			"names": ["2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace"],
+			"values": [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11]
+			}
+		,
+}
