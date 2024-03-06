@@ -14,12 +14,8 @@ offset_right = 130.0
 offset_bottom = 55.0
 text = "Draw"
 
-[node name="Card" type="Sprite2D" parent="."]
-position = Vector2(32, 112)
-centered = false
-
 [node name="Hand" type="Node2D" parent="."]
-position = Vector2(32, 112)
+position = Vector2(32, 352)
 
 [node name="Hand value" type="Label" parent="."]
 offset_left = 136.0

@@ -1,6 +1,5 @@
 extends Node2D
 
-@onready var cardSprite = $Card
 @onready var hand = $Hand
 @export var cardScene : PackedScene
 @onready var handValueLabel = $"Hand value"
@@ -39,6 +38,13 @@ func _ready():
 func _process(delta):
 	cardOffset = 50 * hand.get_child_count()
 	handValueLabel.text = str("Hand value: ", handValue)
+	
+	if handValue > 21:
+		handValueLabel.add_theme_color_override("font_color", Color("Red"))
+	elif handValue == 21:
+		handValueLabel.add_theme_color_override("font_color", Color("Green"))
+	else:
+		handValueLabel.add_theme_color_override("font_color", Color("White"))
 
 func _on_draw_card_button_pressed():
 	var drawnSuit = randi_range(0, deckCopy.size() - 1)
