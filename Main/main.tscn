@@ -7,28 +7,30 @@
 script = ExtResource("1_hx1no")
 cardScene = ExtResource("2_j3i4p")
 
-[node name="DrawButton" type="Button" parent="."]
-offset_left = 80.0
-offset_top = 24.0
-offset_right = 130.0
-offset_bottom = 55.0
-text = "Draw"
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 107.0
+offset_bottom = 56.0
+
+[node name="ResetButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Reset"
+
+[node name="DrawButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Hit"
+
+[node name="StandButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Stand"
+
+[node name="Hand value" type="Label" parent="HBoxContainer"]
+layout_mode = 2
 
 [node name="Hand" type="Node2D" parent="."]
 position = Vector2(32, 352)
 
-[node name="Hand value" type="Label" parent="."]
-offset_left = 136.0
-offset_top = 28.0
-offset_right = 176.0
-offset_bottom = 51.0
-
-[node name="ResetButton" type="Button" parent="."]
-offset_left = 24.0
-offset_top = 24.0
-offset_right = 75.0
-offset_bottom = 55.0
-text = "Reset"
-
-[connection signal="pressed" from="DrawButton" to="." method="_on_draw_card_button_pressed"]
-[connection signal="pressed" from="ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/DrawButton" to="." method="_on_draw_card_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/StandButton" to="." method="_on_stand_button_pressed"]
