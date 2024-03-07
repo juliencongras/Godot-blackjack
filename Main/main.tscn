@@ -28,8 +28,11 @@ text = "Stand"
 [node name="Hand value" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 
-[node name="Hand" type="Node2D" parent="."]
+[node name="PlayerHand" type="Node2D" parent="."]
 position = Vector2(32, 352)
+
+[node name="DealerHand" type="Node2D" parent="."]
+position = Vector2(32, 80)
 
 [connection signal="pressed" from="HBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/DrawButton" to="." method="_on_draw_card_button_pressed"]
