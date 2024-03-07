@@ -4,12 +4,15 @@ extends Node2D
 @onready var dealerHand = $DealerHand
 @export var cardScene : PackedScene
 @onready var handValueLabel = $"HBoxContainer/Hand value"
+@onready var dealerHandValueLabel = $"HBoxContainer2/Dealer's hand value"
 @onready var hitButton = $HBoxContainer/DrawButton
 @onready var standButton = $HBoxContainer/StandButton
+@onready var dealerDrawCooldown = $"Dealer draw cooldown"
 
 var playerCardOffset : int = 0
 var dealerCardOffset : int = 0
 var playerHandValue : int = 0
+var dealerHandValue : int = 0
 var deckCopy : Dictionary = {
 	"hearts":
 		{
@@ -41,8 +44,8 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	playerCardOffset = 50 * playerHand.get_child_count()
-	dealerCardOffset = 50 * dealerHand.get_child_count()
 	handValueLabel.text = str("Hand value: ", playerHandValue)
+	dealerHandValueLabel.text = str("Dealer's hand value: ", dealerHandValue)
 	
 	if playerHandValue > 21:
 		handValueLabel.add_theme_color_override("font_color", Color("Red"))
@@ -62,7 +65,10 @@ func _on_draw_card_button_pressed():
 func _on_reset_button_pressed():
 	for card in playerHand.get_children():
 		card.queue_free()
+	for card in dealerHand.get_children():
+		card.queue_free()
 	playerHandValue = 0
+	dealerHandValue = 0
 	#The duplicate function doesn't work, so, I have to reassign the dictionary from scratch if I want to reset the deck.
 	deckCopy = {
 		"hearts":
@@ -89,10 +95,19 @@ func _on_reset_button_pressed():
 	}
 	hitButton.disabled = false
 	standButton.disabled = false
-	
+	dealerCardOffset = 0
+	#var cardInstance = drawRandomCard()
+	#cardInstance.position = Vector2(dealerCardOffset, 0)
+	#dealerHand.add_child(cardInstance)
+	#dealerHandValue += cardInstance.cardValue
 
 func _on_stand_button_pressed():
-	pass # Replace with function body.
+	while dealerHandValue < 17:
+		var cardInstance = drawRandomCard()
+		cardInstance.position = Vector2(dealerCardOffset, 0)
+		dealerHand.add_child(cardInstance)
+		dealerHandValue += cardInstance.cardValue
+		dealerCardOffset += 50
 
 #Draws a random card and remove it from the deck. Returns a sprite2D with the card's info
 func drawRandomCard():
