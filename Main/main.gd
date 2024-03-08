@@ -39,21 +39,22 @@ var deckCopy : Dictionary = {
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	blackjackGameStart()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	playerHandValue = totalPlayerHandValue()
+	dealerHandValue = totalDealerHandValue()
 	handValueLabel.text = str("Hand value: ", playerHandValue)
 	dealerHandValueLabel.text = str("Dealer's hand value: ", dealerHandValue)
 	
 	if playerHandValue > 21:
-		handValueLabel.add_theme_color_override("font_color", Color("Red"))
+		for card in playerHand.get_children():
+			if card.cardValue == 11:
+				card.cardValue = 1
+				break
 		hitButton.disabled = true
 		standButton.disabled = true
-	elif playerHandValue == 21:
-		handValueLabel.add_theme_color_override("font_color", Color("Green"))
-	else:
-		handValueLabel.add_theme_color_override("font_color", Color("White"))
 
 func _on_draw_card_button_pressed():
 	addPlayerCard()
@@ -64,6 +65,16 @@ func _on_reset_button_pressed():
 func _on_stand_button_pressed():
 	while dealerHandValue < 17:
 		addDealerCard()
+	
+	#Player wins
+	if dealerHandValue < playerHandValue or dealerHandValue > 21:
+		print("Player wins!")
+	#Dealer wins
+	elif dealerHandValue > playerHandValue:
+		print("Dealer wins!")
+	#Draw
+	else:
+		print("Draw!")
 
 #Draws a random card and remove it from the deck. Returns a sprite2D with the card's info
 func drawRandomCard():
@@ -87,7 +98,6 @@ func addPlayerCard():
 	var cardInstance = drawRandomCard()
 	cardInstance.position = Vector2(playerCardOffset, 0)
 	playerHand.add_child(cardInstance)
-	playerHandValue += cardInstance.cardValue
 	playerCardOffset += 50
 
 #Add a random card from the deck to the dealer's hand.
@@ -95,8 +105,19 @@ func addDealerCard():
 	var cardInstance = drawRandomCard()
 	cardInstance.position = Vector2(dealerCardOffset, 0)
 	dealerHand.add_child(cardInstance)
-	dealerHandValue += cardInstance.cardValue
 	dealerCardOffset += 50
+
+func totalPlayerHandValue():
+	var totalValue : int = 0
+	for card in playerHand.get_children():
+		totalValue += card.cardValue
+	return totalValue
+
+func totalDealerHandValue():
+	var totalValue : int = 0
+	for card in dealerHand.get_children():
+		totalValue += card.cardValue
+	return totalValue
 
 #Use this function when starting a new blackjack game.
 func blackjackGameStart():
@@ -104,8 +125,6 @@ func blackjackGameStart():
 		card.queue_free()
 	for card in dealerHand.get_children():
 		card.queue_free()
-	playerHandValue = 0
-	dealerHandValue = 0
 	#The duplicate function doesn't work, so, I have to reassign the dictionary from scratch if I want to reset the deck.
 	deckCopy = {
 		"hearts":
