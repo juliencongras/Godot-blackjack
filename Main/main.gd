@@ -43,7 +43,6 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	playerCardOffset = 50 * playerHand.get_child_count()
 	handValueLabel.text = str("Hand value: ", playerHandValue)
 	dealerHandValueLabel.text = str("Dealer's hand value: ", dealerHandValue)
 	
@@ -57,12 +56,50 @@ func _process(delta):
 		handValueLabel.add_theme_color_override("font_color", Color("White"))
 
 func _on_draw_card_button_pressed():
+	addPlayerCard()
+
+func _on_reset_button_pressed():
+	blackjackGameStart()
+
+func _on_stand_button_pressed():
+	while dealerHandValue < 17:
+		addDealerCard()
+
+#Draws a random card and remove it from the deck. Returns a sprite2D with the card's info
+func drawRandomCard():
+	var drawnSuit = randi_range(0, deckCopy.size() - 1)
+	var drawnSuitRandom = deckCopy.keys()[drawnSuit]
+	var randomCard = randi_range(0, deckCopy[drawnSuitRandom]["names"].size() - 1)
+	var randomCardName = deckCopy[drawnSuitRandom]["names"][randomCard]
+	var randomCardValue = deckCopy[drawnSuitRandom]["values"][randomCard]
+	var cardInstance = cardScene.instantiate()
+	cardInstance.cardSuit = drawnSuitRandom
+	cardInstance.cardName = randomCardName
+	cardInstance.cardValue = randomCardValue
+	deckCopy[drawnSuitRandom]["names"].remove_at(randomCard)
+	deckCopy[drawnSuitRandom]["values"].remove_at(randomCard)
+	if deckCopy[drawnSuitRandom]["names"].size() == 0:
+		deckCopy.erase(drawnSuitRandom)
+	return cardInstance
+
+#Add a random card from the deck to the player's hand.
+func addPlayerCard():
 	var cardInstance = drawRandomCard()
 	cardInstance.position = Vector2(playerCardOffset, 0)
 	playerHand.add_child(cardInstance)
 	playerHandValue += cardInstance.cardValue
+	playerCardOffset += 50
 
-func _on_reset_button_pressed():
+#Add a random card from the deck to the dealer's hand.
+func addDealerCard():
+	var cardInstance = drawRandomCard()
+	cardInstance.position = Vector2(dealerCardOffset, 0)
+	dealerHand.add_child(cardInstance)
+	dealerHandValue += cardInstance.cardValue
+	dealerCardOffset += 50
+
+#Use this function when starting a new blackjack game.
+func blackjackGameStart():
 	for card in playerHand.get_children():
 		card.queue_free()
 	for card in dealerHand.get_children():
@@ -95,33 +132,8 @@ func _on_reset_button_pressed():
 	}
 	hitButton.disabled = false
 	standButton.disabled = false
+	playerCardOffset = 0
 	dealerCardOffset = 0
-	#var cardInstance = drawRandomCard()
-	#cardInstance.position = Vector2(dealerCardOffset, 0)
-	#dealerHand.add_child(cardInstance)
-	#dealerHandValue += cardInstance.cardValue
-
-func _on_stand_button_pressed():
-	while dealerHandValue < 17:
-		var cardInstance = drawRandomCard()
-		cardInstance.position = Vector2(dealerCardOffset, 0)
-		dealerHand.add_child(cardInstance)
-		dealerHandValue += cardInstance.cardValue
-		dealerCardOffset += 50
-
-#Draws a random card and remove it from the deck. Returns a sprite2D with the card's info
-func drawRandomCard():
-	var drawnSuit = randi_range(0, deckCopy.size() - 1)
-	var drawnSuitRandom = deckCopy.keys()[drawnSuit]
-	var randomCard = randi_range(0, deckCopy[drawnSuitRandom]["names"].size() - 1)
-	var randomCardName = deckCopy[drawnSuitRandom]["names"][randomCard]
-	var randomCardValue = deckCopy[drawnSuitRandom]["values"][randomCard]
-	var cardInstance = cardScene.instantiate()
-	cardInstance.cardSuit = drawnSuitRandom
-	cardInstance.cardName = randomCardName
-	cardInstance.cardValue = randomCardValue
-	deckCopy[drawnSuitRandom]["names"].remove_at(randomCard)
-	deckCopy[drawnSuitRandom]["values"].remove_at(randomCard)
-	if deckCopy[drawnSuitRandom]["names"].size() == 0:
-		deckCopy.erase(drawnSuitRandom)
-	return cardInstance
+	addDealerCard()
+	addPlayerCard()
+	addPlayerCard()
