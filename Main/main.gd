@@ -43,8 +43,6 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	playerHandValue = totalPlayerHandValue()
-	dealerHandValue = totalDealerHandValue()
 	handValueLabel.text = str("Hand value: ", playerHandValue)
 	dealerHandValueLabel.text = str("Dealer's hand value: ", dealerHandValue)
 	
@@ -99,6 +97,7 @@ func addPlayerCard():
 	cardInstance.position = Vector2(playerCardOffset, 0)
 	playerHand.add_child(cardInstance)
 	playerCardOffset += 50
+	playerHandValue = totalPlayerHandValue()
 
 #Add a random card from the deck to the dealer's hand.
 func addDealerCard():
@@ -106,6 +105,7 @@ func addDealerCard():
 	cardInstance.position = Vector2(dealerCardOffset, 0)
 	dealerHand.add_child(cardInstance)
 	dealerCardOffset += 50
+	dealerHandValue = totalDealerHandValue()
 
 func totalPlayerHandValue():
 	var totalValue : int = 0
@@ -122,8 +122,10 @@ func totalDealerHandValue():
 #Use this function when starting a new blackjack game.
 func blackjackGameStart():
 	for card in playerHand.get_children():
+		playerHand.remove_child(card)
 		card.queue_free()
 	for card in dealerHand.get_children():
+		dealerHand.remove_child(card)
 		card.queue_free()
 	#The duplicate function doesn't work, so, I have to reassign the dictionary from scratch if I want to reset the deck.
 	deckCopy = {
