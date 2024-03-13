@@ -50,9 +50,12 @@ func _process(delta):
 		for card in playerHand.get_children():
 			if card.cardValue == 11:
 				card.cardValue = 1
+				playerHandValue = totalPlayerHandValue()
 				break
-		hitButton.disabled = true
-		standButton.disabled = true
+		#Extremely cursed but I'm not sure how else to do it
+		if playerHandValue > 21:
+			hitButton.disabled = true
+			standButton.disabled = true
 
 func _on_draw_card_button_pressed():
 	addPlayerCard()
@@ -61,6 +64,8 @@ func _on_reset_button_pressed():
 	blackjackGameStart()
 
 func _on_stand_button_pressed():
+	hitButton.disabled = true
+	standButton.disabled = true
 	while dealerHandValue < 17:
 		addDealerCard()
 	
