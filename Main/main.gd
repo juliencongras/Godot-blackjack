@@ -47,6 +47,7 @@ func _process(delta):
 	dealerHandValueLabel.text = str("Dealer's hand value: ", dealerHandValue)
 	
 	if playerHandValue > 21:
+		#Check for aces
 		for card in playerHand.get_children():
 			if card.cardValue == 11:
 				card.cardValue = 1
@@ -68,6 +69,13 @@ func _on_stand_button_pressed():
 	standButton.disabled = true
 	while dealerHandValue < 17:
 		addDealerCard()
+		#Check for aces
+		if dealerHandValue > 21:
+			for card in dealerHand.get_children():
+				if card.cardValue == 11:
+					card.cardValue = 1
+					dealerHandValue = totalDealerHandValue()
+					break
 	
 	#Player wins
 	if dealerHandValue < playerHandValue or dealerHandValue > 21:
